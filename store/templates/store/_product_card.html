@@ -1,0 +1,29 @@
+<div class="product-card position-relative">
+    <a href="{% url 'product_detail' product.pk %}">
+        <img class="product-image" src="{{ product.image_url }}" alt="{{ product.title }}">
+    </a>
+    {% if product.has_discount %}
+        <span class="sale-badge">SALE</span>
+    {% endif %}
+    <form method="post" action="{% url 'add_to_wishlist' product.pk %}">
+        {% csrf_token %}
+        <button class="wishlist-button" type="submit" aria-label="Add to wishlist" title="Add to wishlist">
+            <i class="bi bi-heart"></i>
+        </button>
+    </form>
+    <div class="p-3 text-center">
+        <a class="product-name d-block" href="{% url 'product_detail' product.pk %}">{{ product.title }}</a>
+        <div class="mt-2">
+            <span class="price">Rs. {{ product.current_price }}</span>
+            {% if product.has_discount %}
+                <span class="old-price ms-1">Rs. {{ product.price }}</span>
+            {% endif %}
+        </div>
+        <form method="post" action="{% url 'add_to_cart' product.pk %}" class="mt-3">
+            {% csrf_token %}
+            <button class="btn outline-gold-btn w-100" type="submit">
+                <i class="bi bi-bag-plus me-1"></i> Add to Cart
+            </button>
+        </form>
+    </div>
+</div>

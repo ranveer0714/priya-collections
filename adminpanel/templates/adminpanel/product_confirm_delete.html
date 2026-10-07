@@ -1,0 +1,23 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}Delete Product | Priya Collection{% endblock %}
+{% block page_title %}Delete Product{% endblock %}
+
+{% block content %}
+<div class="admin-card p-4">
+    <div class="row g-4 align-items-center">
+        <div class="col-md-3">
+            <img class="img-fluid rounded-1" src="{{ product.image_url }}" alt="{{ product.title }}">
+        </div>
+        <div class="col-md-9">
+            <h2 class="h4">Delete "{{ product.title }}"?</h2>
+            <p class="text-muted">This product will disappear from the store, category pages, cart, and wishlist flows.</p>
+            <form method="post" class="d-flex gap-2">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Delete Product</button>
+                <a class="btn btn-outline-dark" href="{% url 'adminpanel:product_list' %}">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

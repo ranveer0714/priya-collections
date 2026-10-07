@@ -1,0 +1,61 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}Orders | Priya Collection{% endblock %}
+{% block page_title %}Orders{% endblock %}
+
+{% block content %}
+<div class="admin-card p-4">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in page_obj %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>
+                            {% for item in order.items.all %}
+                                <div>{{ item.product_title }} &times; {{ item.quantity }} <span class="text-muted">(Rs. {{ item.unit_price }})</span></div>
+                            {% empty %}
+                                -
+                            {% endfor %}
+                        </td>
+                        <td>{{ order.email|default:'-' }}</td>
+                        <td>{{ order.phone|default:'-' }}</td>
+                        <td>Rs. {{ order.total_amount }}</td>
+                        <td><span class="badge text-bg-dark">{{ order.get_status_display }}</span></td>
+                        <td>{{ order.date|date:'d M Y, h:i A' }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted py-4">No orders yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="mt-3" aria-label="Orders pagination">
+            <ul class="pagination justify-content-end">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

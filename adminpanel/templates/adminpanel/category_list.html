@@ -1,0 +1,43 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}Categories | Priya Collection{% endblock %}
+{% block page_title %}Categories{% endblock %}
+
+{% block content %}
+<div class="admin-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0">Category List</h2>
+        <a class="btn gold-btn" href="{% url 'adminpanel:category_create' %}"><i class="bi bi-plus-lg me-1"></i> Add Category</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th>Products</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <td>{{ category.name }}</td>
+                        <td>{{ category.slug|default:'-' }}</td>
+                        <td>{{ category.products.count }}</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-dark" href="{% url 'adminpanel:category_update' category.pk %}"><i class="bi bi-pencil"></i></a>
+                            <form class="d-inline" method="post" action="{% url 'adminpanel:category_delete' category.pk %}" onsubmit="return confirm('Delete this category?');">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted py-4">No categories yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

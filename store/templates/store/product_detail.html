@@ -1,0 +1,50 @@
+{% extends 'store/base.html' %}
+
+{% block title %}{{ product.title }} | Priya Collection{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-6">
+            <img class="img-fluid rounded-1 w-100 content-shell p-0" src="{{ product.image_url }}" alt="{{ product.title }}">
+        </div>
+        <div class="col-lg-6">
+            <div class="content-shell p-4 p-lg-5">
+                <p class="text-uppercase text-muted small fw-semibold mb-2">{{ product.category.name|default:'Jewellery' }}</p>
+                <h1 class="mb-3">{{ product.title }}</h1>
+                <div class="fs-4 mb-3">
+                    <span class="price">Rs. {{ product.current_price }}</span>
+                    {% if product.has_discount %}
+                        <span class="old-price ms-2">Rs. {{ product.price }}</span>
+                    {% endif %}
+                </div>
+                <p class="text-muted">A refined piece from Priya Collection, selected for elegant styling and everyday confidence.</p>
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <form method="post" action="{% url 'add_to_cart' product.pk %}">
+                        {% csrf_token %}
+                        <button class="btn gold-btn" type="submit"><i class="bi bi-bag-plus me-1"></i> Add to Cart</button>
+                    </form>
+                    <form method="post" action="{% url 'add_to_wishlist' product.pk %}">
+                        {% csrf_token %}
+                        <button class="btn outline-gold-btn" type="submit"><i class="bi bi-heart me-1"></i> Add to Wishlist</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if related_products %}
+        <div class="section-title">
+            <h2>More Like This</h2>
+            <div class="title-line"></div>
+        </div>
+        <div class="row g-4">
+            {% for product in related_products %}
+                <div class="col-6 col-md-3">
+                    {% include 'store/_product_card.html' %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

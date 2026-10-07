@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg site-navbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand brand" href="{% url 'home' %}">PRIYA COLLECTION</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'products' %}active{% endif %}" href="{% url 'products' %}">All Jewellery</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'categories' or request.resolver_match.url_name == 'category_products' %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Categories
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'categories' %}">Shop by Category</a></li>
+                        {% for category in nav_categories %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'category_products' category.id category.slug|default:'jewellery' %}">{{ category.name }}</a>
+                            </li>
+                        {% empty %}
+                            <li><span class="dropdown-item text-muted">No categories</span></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a>
+                </li>
+                {% if request.user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'adminpanel:dashboard' %}">Dashboard</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <div class="d-flex align-items-center gap-2 ms-lg-3">
+                {% if request.user.is_authenticated %}
+                    <span class="text-muted small">Hi, {{ request.user.first_name|default:request.user.username }}</span>
+                    <a class="small fw-semibold" href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a class="small fw-semibold" href="{% url 'login' %}">Login</a>
+                {% endif %}
+                <a class="icon-link" href="{% url 'wishlist' %}" aria-label="Wishlist">
+                    <i class="bi bi-heart"></i>
+                    {% if wishlist_count %}<span class="count-badge">{{ wishlist_count }}</span>{% endif %}
+                </a>
+                <a class="icon-link" href="{% url 'cart' %}" aria-label="Cart">
+                    <i class="bi bi-bag"></i>
+                    {% if cart_count %}<span class="count-badge">{{ cart_count }}</span>{% endif %}
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,47 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}{{ title }} | Priya Collection{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="admin-card p-4">
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="row g-4">
+            <div class="col-lg-7">
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-lg-5">
+                <label class="form-label">Image Preview</label>
+                <img id="imagePreview" class="img-fluid rounded-1 border w-100" src="{% if product %}{{ product.image_url }}{% else %}https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80{% endif %}" alt="Product preview">
+            </div>
+        </div>
+        <div class="d-flex gap-2 mt-3">
+            <button class="btn gold-btn" type="submit">Save</button>
+            <a class="btn btn-outline-dark" href="{% url 'adminpanel:product_list' %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const imageInput = document.getElementById('id_image');
+    const preview = document.getElementById('imagePreview');
+    if (imageInput && preview) {
+        imageInput.addEventListener('change', function () {
+            const file = this.files && this.files[0];
+            if (!file) return;
+            preview.src = URL.createObjectURL(file);
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}{{ title }} | Priya Collection{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="admin-card p-4">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row g-3">
+            {% for field in form %}
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="d-flex gap-2 mt-4">
+            <button class="btn gold-btn" type="submit">Save</button>
+            <a class="btn btn-outline-dark" href="{% url 'adminpanel:category_list' %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

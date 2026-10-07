@@ -1,0 +1,62 @@
+{% extends 'store/base.html' %}
+
+{% block title %}All Jewellery | Priya Collection{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="section-title mt-0">
+        <h1>All Jewellery</h1>
+        <div class="title-line"></div>
+    </div>
+
+    <form class="content-shell p-3 mb-4" method="get">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label class="form-label">Search</label>
+                <input class="form-control" type="search" name="q" value="{{ query }}" placeholder="Search by product or category">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Category</label>
+                <select class="form-select" name="category">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:'s' %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn gold-btn w-100" type="submit">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row g-4">
+        {% for product in page_obj %}
+            <div class="col-6 col-md-4 col-lg-3">
+                {% include 'store/_product_card.html' %}
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="content-shell p-5 text-center">
+                    <h3>No products found</h3>
+                    <p class="text-muted mb-0">Try another search or category.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="mt-4" aria-label="Products pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&category={{ selected_category }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&category={{ selected_category }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}
